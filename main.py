@@ -1,5 +1,5 @@
-from typing import Union, List
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from typing import Union
+from fastapi import FastAPI, File, HTTPException
 
 import json
 from readmrz import MrzDetector, MrzReader
