@@ -25,3 +25,16 @@ The service returns the fields of the passport and the person_equality field, sh
 "document_number_hash":"0","final_hash":"2",
 "person_equality":"equal"}
 ```
+# Settings
+To specify TCP port and CORS origins please attach .env file as follows
+
+```
+PASSPORT_KYC_PORT=8001
+PASSPORT_KYC_CORS_ORIGINS=["http://localhost", "http://localhost:4200"]
+```
+
+Run as follows
+
+```
+python3 main.py
+```

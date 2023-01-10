@@ -1,5 +1,8 @@
-from typing import Union
+from typing import Union, List
 from fastapi import FastAPI, File, HTTPException
+from pydantic import AnyHttpUrl, BaseSettings, validator
+from starlette.middleware.cors import CORSMiddleware
+import uvicorn
 
 import json
 from readmrz import MrzDetector, MrzReader
@@ -9,6 +12,27 @@ import numpy as np
 import face_recognition
 import PIL.Image
 from io import BytesIO
+
+class Settings(BaseSettings):    
+    PASSPORT_KYC_PORT: int = 8000
+    # PASSPORT_KYC_CORS_ORIGINS is a JSON-formatted list of origins
+    # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000", \
+    # "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com"]'
+    PASSPORT_KYC_CORS_ORIGINS: List[AnyHttpUrl] = []
+
+    @validator("PASSPORT_KYC_CORS_ORIGINS", pre=True)
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
+
+    class Config:
+        case_sensitive = True
+        env_file = '.env'
+        env_file_encoding = 'utf-8'
+        
 
 def read_cv_img(file):        
         image = None
@@ -38,8 +62,21 @@ def read_np_img(file):
             raise HTTPException(status_code=404, detail="Error reading file for face recognition: {}".format(e))
 
         return arr
+
+settings = Settings()
         
 app = FastAPI()
+
+# Set all CORS enabled origins
+if settings.PASSPORT_KYC_CORS_ORIGINS:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[str(origin) for origin in settings.PASSPORT_KYC_CORS_ORIGINS],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
 
 @app.post("/passport_kyc/")
 async def create_file(
@@ -78,4 +115,7 @@ async def create_file(
     #add result of comparing to response
     result['person_equality'] = 'equal' if res==True else 'different'
            
-    return result   
+    return result 
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=int(settings.PASSPORT_KYC_PORT))
