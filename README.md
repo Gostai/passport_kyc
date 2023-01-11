@@ -38,3 +38,23 @@ Run as follows
 ```
 python3 main.py
 ```
+
+# Setup 
+To set up, firstly you must install tesseract:
+
+```
+sudo apt-get install -y tesseract-ocr
+```
+and install dlib with Python bindings:
+
+```
+git clone https://github.com/davisking/dlib.git
+cd dlib
+python3 setup.py install
+```
+than install dependencies from requirements.txt:
+
+```
+pip install -r requirements.txt
+```
+If you have some problems with instalation, try setup according to the Dockerfile
