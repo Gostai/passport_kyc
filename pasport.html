@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Passport KYC</title>
+  </head>
+  <body>
+	<form action="http://localhost:8001/passport_kyc/" method="post" enctype="multipart/form-data">
+		<div>
+			<label for="file">Choose a passport scan with MRZ</label>
+			<input type="file" id="file1" name="passport">
+		</div>
+		<div>
+			<label for="file">Choose a photo of the user</label>
+			<input type="file" id="file2" name="photo">
+		</div>
+		<div>
+			<button>Send passport and photo</button>
+		</div>
+	</form>
+
+  </body>
+</html>

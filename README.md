@@ -1,6 +1,6 @@
 # Passport KYC 
 
-Post 2 images to server at http://127.0.0.1/passport_kyc/ 
+Post 2 images to server, according to settings in .env, at http://127.0.0.1:8001/passport_kyc/ 
 
  - first is passport scan with Machine-Readable Zone 
  
@@ -12,7 +12,7 @@ curl -X POST -S
 	 -H 'Content-Type: multipart/form-data' 
 	 -F 'passport=@images/passport.jpg;type=image/jpg' 
 	 -F 'photo=@images/photo.jpg;type=image/jpg' 
-	 http://127.0.0.1/passport_kyc/
+	 http://127.0.0.1:8001/passport_kyc/
 ```
 
 The service returns the fields of the passport and the person_equality field, showing whether or not the people in the images match
@@ -25,6 +25,9 @@ The service returns the fields of the passport and the person_equality field, sh
 "document_number_hash":"0","final_hash":"2",
 "person_equality":"equal"}
 ```
+
+or use simple html form as in example in passport.html 
+
 # Settings
 To specify TCP port and CORS origins please attach .env file as follows
 
